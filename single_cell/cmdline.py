@@ -70,7 +70,6 @@ def add_global_args(parser, dont_add_input_yaml=False):
     config_args.add_argument(
         "--config_file",
         help='''Path to output directory.''')
-
     config_args.add_argument(
         "--config_override",
         type=json.loads,
@@ -242,6 +241,14 @@ def parse_args():
         help='''add destruct to list of analyses'''
     )
 
+    multi_sample_pseudo_bulk.add_argument(
+        "--svtyper_output",
+        help='''add svtyper to list of analyses'''
+     )
+    multi_sample_pseudo_bulk.add_argument(
+        "--variant_calls",
+        help='''input variantcalls for svtyper'''
+    )
     multi_sample_pseudo_bulk.add_argument(
         "--lumpy_output",
         help='''add lumpy to list of analyses'''
