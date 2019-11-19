@@ -22,22 +22,31 @@ def merge_fastq_screen_counts(
             continue
         detailed_data.append(pd.read_csv(countsfile))
 
-    df = pd.concat(detailed_data)
-
+    if len(detailed_data) > 0:
+        df = pd.concat(detailed_data)
+    else:
+        df = pd.DataFrame(columns = ["cell_id"," readend","human","mouse","count"])
     index_cols = [v for v in df.columns.values if v != "count"]
 
     df['count'] = df.groupby(index_cols)['count'].transform('sum')
 
     df = df.drop_duplicates(subset=index_cols)
 
-    csvutils.write_dataframe_to_csv_and_yaml(df, merged_detailed_counts, write_header=True)
+    csvutils.write_dataframe_to_csv_and_yaml(
+        df, merged_detailed_counts, write_header=True, dtypes=dtypes()
+    )
 
     if isinstance(all_summary_counts, dict):
         all_summary_counts = all_summary_counts.values()
 
     summary_counts = [pd.read_csv(countsfile) for countsfile in all_summary_counts]
-    df = pd.concat(summary_counts)
 
+    if len(summary_counts) > 0:
+        df = pd.concat(summary_counts)
+    else:
+        df = pd.DataFrame(columns - ["cell_id",  "fastqscreen_nohit"])
+        
+    
     update_cols = [v for v in df.columns.values if v != 'cell_id']
 
     for colname in update_cols:
